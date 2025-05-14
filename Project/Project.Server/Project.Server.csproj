@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <SpaRoot>..\project.client</SpaRoot>
+    <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
+    <SpaProxyServerUrl>https://localhost:60676</SpaProxyServerUrl>
+    <UserSecretsId>43ca1673-6c7f-44ff-a9b2-f08aecd1123a</UserSecretsId>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<!-- Use the same version for all EF Core packages -->
+		<PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.9">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+
+		<!-- SpaProxy version, usually this would be for SPA integration like React -->
+		<PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="7.0.9" />
+
+		<!-- OpenAPI support for Swagger in ASP.NET Core -->
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+    <ProjectReference Include="..\project.client\project.client.esproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+
+
+	<ItemGroup>
+	  <Folder Include="Uploads\" />
+	</ItemGroup>
+
+</Project>

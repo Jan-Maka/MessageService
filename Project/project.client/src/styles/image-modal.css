@@ -1,0 +1,29 @@
+.image-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); 
+    top: 0;
+    left: 0;
+}
+
+.image-content {
+    position: relative;
+    width: 90%;
+    height: 90%;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: hidden;
+}
+
+.image-content img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 5px;
+}

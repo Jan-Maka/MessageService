@@ -1,0 +1,25 @@
+.chat-card {
+    border:1px solid darkgrey;
+    padding:5%;
+}
+
+.chat-card:hover {
+    cursor:pointer;
+    background-color:lightgrey;
+}
+
+.last-message-sent {
+    font-size:12px;
+    margin-top: 5px;
+    color:darkgrey;
+}
+
+.latest-message-sent {
+    color:dimgray;
+}
+
+.chat-card-container.disabled {
+    pointer-events: none;
+    background-color:lightgray;
+    opacity:0.80;
+}

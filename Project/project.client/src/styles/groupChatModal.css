@@ -1,0 +1,81 @@
+.modal-body form {
+    margin:2.5%;
+}
+
+.form-chat-input {
+    padding:12px;
+    width:100%;
+    font-size:15px;
+    border-radius:7.5px;
+    border:1px solid lightgrey;
+}
+
+.form-chat-input:focus {
+    border-color: cadetblue;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.6);
+    outline: none;
+    transform: scale(1.025);
+}
+
+.modal-body form h3 {
+    margin: 2.5% 0% 2.5% 0%;
+}
+
+.friend-search {
+    margin-bottom:2.5%;
+    display:flex;
+}
+
+.friend-search input{
+    border-radius: 7.5px 0px 0px 7.5px;
+}
+
+.user-search-btn {
+    background-color: dodgerblue;
+    color: white;
+    border-radius: 0px 7.5px 7.5px 0px;
+}
+
+.user-search-btn:hover {
+    background-color:royalblue;
+}
+
+.users-list {
+    height: 200px;
+    border: 1px solid lightgrey;
+    background-color: field;
+    border-radius: 7.5px;
+}
+
+.users-list:hover {
+    border-color: cadetblue;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.6);
+    outline: none;
+    transform: scale(1.025);
+    overflow-y:auto;
+}
+
+.create-chat-btn {
+    margin-top:2.5%;
+    border-radius:5px;
+    font-size:15px;
+    padding: 10px;
+    cursor:pointer;
+    background-color:forestgreen;
+    color:white;
+    border: 1px solid grey
+}
+
+.create-chat-btn:hover {
+    background-color:darkgreen;
+    transform: scale(1.05)
+}
+
+.user-friend {
+    display:flex;
+    border-bottom:1px solid lightgrey;
+    width:100%;
+    padding:15px;
+    justify-content:space-between;
+}
+

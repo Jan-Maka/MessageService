@@ -1,0 +1,91 @@
+.settings-container {
+    margin: 3% 20%;
+    background-color: #E5E4E2;
+    max-width: calc(100% - 20%);
+    height:fit-content;
+    border-radius: 30px;
+    border:1px solid silver;
+}
+
+
+.settings-form-container{
+    margin:4% 5%;
+    background-color: ghostwhite;
+    height:fit-content;
+    border-radius:30px;
+    border:1px solid lightgrey;
+}
+
+.settings-form-container h1 {
+    margin:2%;
+}
+
+.profile-container {
+    margin: 5%;
+    display: flex;
+}
+
+.profile-container img {
+    height:300px;
+    width:300px;
+    border-radius:50%;
+    border:1px solid silver;
+}
+
+.settings-field, .emails-field {
+    display: flex;
+    flex-direction: column;
+    padding:20px;
+}
+
+.emails-field {
+    padding:0px;
+}
+
+.settings-field input{
+    border-radius: 7.5px;
+    height:50px;
+    padding:5px;
+    margin:7.5px 0px 7.5px 0px;
+}
+
+.submit-btn {
+    border-radius: 5px;
+    font-size: 15px;
+    padding: 10px;
+    cursor: pointer;
+    background-color: forestgreen;
+    color: white;
+    border: 1px solid grey;
+    width: fit-content;
+}
+
+.submit-btn:hover {
+    background-color: darkgreen;
+}
+
+.submit-btn:disabled{
+  cursor: not-allowed;
+  background-color:darkgreen;
+    opacity: 0.75;
+
+}
+
+.change-email-btn {
+    border-radius: 5px;
+    font-size: 15px;
+    padding: 10px;
+    cursor: pointer;
+    background-color: dodgerblue;
+    color: white;
+    border: 1px solid grey;
+    width: fit-content;
+}
+
+.change-email-btn:hover {
+    background-color:blue;
+}
+
+.error-text {
+ color:red;
+}
