@@ -19,8 +19,11 @@ namespace Project.Server.Components
                     HttpMethods.IsOptions(httpContext.Request.Method) ||
                     httpContext.Request.Path.StartsWithSegments("/api/authentication/login") ||
                     httpContext.Request.Path.StartsWithSegments("/api/authentication/register") ||
-                    httpContext.Request.Path.StartsWithSegments("/api/authentication/check/password/email"))
-             {
+                    httpContext.Request.Path.StartsWithSegments("/api/authentication/check/password/email")||
+                    httpContext.Request.Path.StartsWithSegments("/api/authentication/send/reset-password") ||
+                    httpContext.Request.Path.StartsWithSegments("/api/authentication/validate/reset-password-token")||
+                    httpContext.Request.Path.StartsWithSegments("/api/authentication/reset-password"))
+            {
                 await _next(httpContext);
                 return;
             }

@@ -165,6 +165,31 @@ namespace Project.Server.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("Project.Server.Models.PasswordResetToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Expiration")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PasswordResetTokens");
+                });
+
             modelBuilder.Entity("Project.Server.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -285,6 +310,17 @@ namespace Project.Server.Migrations
                     b.Navigation("GroupChat");
 
                     b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("Project.Server.Models.PasswordResetToken", b =>
+                {
+                    b.HasOne("Project.Server.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Project.Server.Models.UserConversation", b =>

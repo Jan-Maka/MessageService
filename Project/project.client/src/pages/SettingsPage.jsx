@@ -5,6 +5,7 @@ import { fetchLoggedInUser, updateUser, sendUpdateEmailVerificationCode, verifyA
 import { checkPasswordAgainstEmail, checkUsernameExists, checkEmailExists } from '../services/AuthService';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../utils/AuthContext';
+import ChangePasswordInput from '../components/Authentication/ChangePasswordInput';
 
 
 function SettingsPage() {
@@ -43,19 +44,10 @@ function SettingsPage() {
         else setIsUsernameValid(true);
     };
 
-    const handleNewPasswordChange = (e) => {
-        const newPass = e.target.value;
-        setNewPassword(newPass);
-        if (rePassword && newPass === rePassword) setPasswordsMatch(true);
-        else setPasswordsMatch(false);
-
-    };
-
-    const handleRePasswordChange = (e) => {
-        const rePass = e.target.value;
-        setRePassword(rePass);
-        if (newPassword && rePass === newPassword) setPasswordsMatch(true);
-        else setPasswordsMatch(false);
+    const handleNewPasswordChange = ({newPassword, rePassword, passwordMatch}) => {
+        setNewPassword(newPassword);
+        setRePassword(rePassword);
+        setPasswordsMatch(passwordMatch);
     };
 
     const handleConfirmPasswordChange = async (e) => {
@@ -147,10 +139,7 @@ function SettingsPage() {
 
                     <div className="settings-field">
                         <h2>Change Password</h2>
-                        <p>Note: After Changing your password you will be logged out and prompted to login again.</p>
-                        {(!passwordMatch && newPassword.length !== 0) && <p className="error-text">Error: Passwords dont match</p>}
-                        <input type="password" value={newPassword} placeholder="New Password" onChange={(e) => handleNewPasswordChange(e)} />
-                        <input type="password" value={rePassword} placeholder="Repeat Password" onChange={(e) => handleRePasswordChange(e)} />
+                        <ChangePasswordInput onChange={handleNewPasswordChange} />
                     </div>
                     <hr />
 

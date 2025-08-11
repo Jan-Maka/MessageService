@@ -10,7 +10,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-if (builder.Environment.IsDevelopment()) {
+if (builder.Environment.IsDevelopment())
+{
     builder.Configuration.AddUserSecrets<Program>();
 }
 
@@ -42,6 +43,13 @@ builder.Services.AddCors(options =>
     });
 });
 
+var jwtSecret = builder.Configuration["JWT_SECRET"];
+
+if (string.IsNullOrEmpty(jwtSecret))
+{
+    throw new InvalidOperationException("JWT_SECRET environment variable is missing.");
+}
+
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
@@ -55,7 +63,7 @@ builder.Services.AddAuthentication("Bearer")
             ValidateIssuerSigningKey = true,
             ValidIssuer = "Jan Industries",
             ValidAudience = "People",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET")))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
         };
     });
 
@@ -91,6 +99,7 @@ builder.Services.AddScoped<IAttachmentService, AttachmentService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IEmailVerificationService, EmailVerificationService>();
 builder.Services.AddScoped<IVerificationStore, InMemoryVerificationStore>();
+builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
 
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 

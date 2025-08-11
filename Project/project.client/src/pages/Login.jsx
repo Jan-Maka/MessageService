@@ -67,7 +67,8 @@ function Login() {
                 <input type="email" placeholder="Enter email" value={email} onChange={handleEmailChange}></input>
                 {passwordError && <p className="error">{passwordError}</p>}
                 <input type="password" placeholder="Enter password" value={password} onChange={handlePasswordChange} disabled={!emailValid}></input>
-                <button disabled={!formValid}>Login</button>
+                <a className='link' href="forgot-password">Forgot Password?</a>
+                <button className='btn btn-success' disabled={!formValid}>Login</button>
             </form>
         </AuthContainer>);
 }

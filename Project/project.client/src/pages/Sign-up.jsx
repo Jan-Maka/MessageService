@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import AuthContainer from '../components/Authentication/AuthContainer';
 import { checkEmailExists, checkUsernameExists, createAccount } from '../services/AuthService';
 import { useNavigate } from 'react-router-dom';
+import ChangePasswordInput from '../components/Authentication/ChangePasswordInput';
 
 
 function SignUp() {
@@ -22,6 +23,17 @@ function SignUp() {
     useEffect(() => {
         setIsFormValid(isEmailValid && isUsernameValid && isPasswordValid && isPasswordMatch);
     }, [isEmailValid, isUsernameValid, isPasswordValid, isPasswordMatch]);
+
+    useEffect(() => {
+        if(isPasswordMatch && password.length > 6 && repPassword.length > 6) setIsPasswordValid(true);
+        else if(isPasswordMatch && (password.length < 6 || repPassword.length < 6)) {
+            setIsPasswordValid(false);
+            const error = 'Password must be at least 6 characters!';
+            setPasswordError(error);
+            
+        }else setPasswordError('');
+
+    },[isPasswordMatch]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -75,39 +87,11 @@ function SignUp() {
         }
     };
 
-    const handlePasswordChange = (e) => {
-        const newPassword = e.target.value;
+    const handlePasswordChange = ({newPassword, rePassword, passwordMatch}) => {
         setPassword(newPassword);
-
-        if (newPassword.length < 6) {
-            setPasswordError('Password must be at least 6 characters!');
-            setIsPasswordValid(false);
-        }else {
-            setPasswordError('');
-            setIsPasswordValid(true);
-        }
-
-        if (newPassword != repPassword && repPassword.length !== 0) {
-            setPasswordError('Error: Passwords do not match!');
-            setIsPasswordMatch(false);
-        } else {
-            setPasswordError('');
-            setIsPasswordMatch(true);
-        }
-    };
-
-    const handleRepPasswordChange = (e) => {
-        const newRepPassword = e.target.value;
-        setRepPassword(newRepPassword);
-
-        if (password && newRepPassword !== password) {
-            setPasswordError('Error: Passwords do not match!');
-            setIsPasswordMatch(false);
-        } else {
-            setPasswordError('');
-            setIsPasswordMatch(true);
-        }
-    };
+        setRepPassword(rePassword);
+        setIsPasswordMatch(passwordMatch);
+    }
 
     return (
         <AuthContainer title="Sign-Up">
@@ -119,11 +103,9 @@ function SignUp() {
                 <input type="text" placeholder="Enter Username" value={username} onChange={handleUsernameChange} required />
 
                 {passwordError && <p className="error">{passwordError}</p>}
-                <input type="password" placeholder="Enter Password" value={password} onChange={handlePasswordChange} required />
+                <ChangePasswordInput onChange={handlePasswordChange} />
 
-                <input type="password" placeholder="Repeat Password" value={repPassword} onChange={handleRepPasswordChange} required />
-
-                <button type="submit" disabled={!isFormValid}>Create Account</button>
+                <button className='btn btn-success' type="submit" disabled={!isFormValid}>Create Account</button>
             </form>
         </AuthContainer>
     );

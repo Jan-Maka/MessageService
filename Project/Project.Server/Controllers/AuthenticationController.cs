@@ -22,11 +22,14 @@ namespace Project.Server.Controllers
         private readonly IUserService _userService;
         private readonly IEmailVerificationService _emailVerificationService;
 
-        public AuthenticationController(IPasswordHasher passwordHasher, IUserService userService, IEmailVerificationService emailVerificationService)
+        private readonly IPasswordResetService _passwordResetService;
+
+        public AuthenticationController(IPasswordHasher passwordHasher, IUserService userService, IEmailVerificationService emailVerificationService, IPasswordResetService passwordResetService)
         {
             this.passwordHasher = passwordHasher;
             _userService = userService;
             _emailVerificationService = emailVerificationService;
+            _passwordResetService = passwordResetService;
         }
 
         [HttpPost("register")]
@@ -107,7 +110,8 @@ namespace Project.Server.Controllers
         }
 
         [HttpGet("check/username")]
-        public IActionResult CheckUsernameExists([FromQuery(Name = "username")] string username) {
+        public IActionResult CheckUsernameExists([FromQuery(Name = "username")] string username)
+        {
             if (string.IsNullOrEmpty(username)) return BadRequest("Username cannot be null or empty.");
             bool usernameExists = _userService.CheckUserNameExists(username);
             return Ok(usernameExists);
@@ -137,7 +141,8 @@ namespace Project.Server.Controllers
             User user = _userService.GetLoggedInUser(User);
             await _userService.UpdateUser(user, updatedUser);
 
-            if (updatedUser.Password != null) {
+            if (updatedUser.Password != null)
+            {
                 await _userService.UpdateUserPassword(user, updatedUser.Password);
             }
 
@@ -164,24 +169,58 @@ namespace Project.Server.Controllers
 
         [Authorize]
         [HttpPost("send/user-verification-code")]
-        public async Task<IActionResult> SendUpdateEmailVerificationCode() {
+        public async Task<IActionResult> SendUpdateEmailVerificationCode()
+        {
             User user = _userService.GetLoggedInUser(User);
             await _emailVerificationService.SendEmailChangeCode(user);
             return Ok();
-            
+
         }
 
         [Authorize]
         [HttpPost("verify/change-email")]
-        public async Task<IActionResult> VerifyChangeEmailCode([FromQuery(Name ="code")] string code, [FromQuery(Name ="newEmail")] string newEmail) {
+        public async Task<IActionResult> VerifyChangeEmailCode([FromQuery(Name = "code")] string code, [FromQuery(Name = "newEmail")] string newEmail)
+        {
             User user = _userService.GetLoggedInUser(User);
             bool isValid = await _emailVerificationService.VerifyCode(user, code, newEmail);
             if (isValid) return Ok();
             else return Unauthorized();
         }
 
+        [HttpPost("send/reset-password")]
+        public async Task<IActionResult> SendResetPasswordEmail([FromQuery(Name = "email")] string email)
+        {
+            if (string.IsNullOrEmpty(email)) return BadRequest("Email cannot be null or empty.");
+
+            User user = _userService.GetUserByEmail(email);
+            if (user == null) return NotFound("User with this email does not exist.");
+
+            return Ok(await _passwordResetService.SendResetPasswordEmailAsync(email));
+
+        }
 
 
+        [HttpPost("validate/reset-password-token")]
+        public async Task<IActionResult> ValidateResetToken([FromQuery(Name = "resetToken")] string resetToken)
+        {
+            if (string.IsNullOrEmpty(resetToken)) return BadRequest("Reset token cannot be null or empty.");
+            bool isValid = await _passwordResetService.ValidateResetTokenAsync(resetToken);
+            if (isValid) return Ok();
+            else return Unauthorized("Invalid or expired reset token.");
+        }
 
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetPasswordDTO)
+        {
+            if (resetPasswordDTO == null || string.IsNullOrEmpty(resetPasswordDTO.Token) || string.IsNullOrEmpty(resetPasswordDTO.NewPassword)) return BadRequest("Reset token and new password are required.");
+
+            if (_passwordResetService.ValidateResetTokenAsync(resetPasswordDTO.Token).Result == false) return Unauthorized("Invalid or expired reset token.");
+    
+            bool isResetSuccessful = await _passwordResetService.ResetPasswordAsync(resetPasswordDTO.Token, resetPasswordDTO.NewPassword);
+            if (isResetSuccessful) return Ok("Password has been successfully reset.");
+        
+            return Unauthorized("Invalid or expired reset token.");
+            
+        }
     }
 }

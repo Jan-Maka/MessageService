@@ -12,8 +12,8 @@ using Project.Server.Data;
 namespace Project.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250205170351_fixedTypoInConversationAndGroupchat")]
-    partial class fixedTypoInConversationAndGroupchat
+    [Migration("20250519174305_InitalCreateForLinux")]
+    partial class InitalCreateForLinux
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,46 @@ namespace Project.Server.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Project.Server.Models.Attachment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("MessageId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MessageId");
+
+                    b.ToTable("Attachments");
+                });
 
             modelBuilder.Entity("Project.Server.Models.Conversation", b =>
                 {
@@ -101,6 +141,12 @@ namespace Project.Server.Migrations
 
                     b.Property<int?>("ConversationId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Edited")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("EditedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("GroupChatId")
                         .HasColumnType("int");
@@ -190,6 +236,14 @@ namespace Project.Server.Migrations
                     b.HasIndex("GroupChatId");
 
                     b.ToTable("UserGroups");
+                });
+
+            modelBuilder.Entity("Project.Server.Models.Attachment", b =>
+                {
+                    b.HasOne("Project.Server.Models.Message", null)
+                        .WithMany("Attachments")
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Project.Server.Models.FriendRequest", b =>
@@ -305,6 +359,11 @@ namespace Project.Server.Migrations
                     b.Navigation("Messages");
 
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Project.Server.Models.Message", b =>
+                {
+                    b.Navigation("Attachments");
                 });
 
             modelBuilder.Entity("Project.Server.Models.User", b =>

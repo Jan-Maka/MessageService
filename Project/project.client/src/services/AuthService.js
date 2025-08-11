@@ -76,6 +76,59 @@ const loginUser = async (user) => {
     }
 };
 
+const sendResetPasswordEmail = async (email) => {
+    try {
+        const response = await fetch(`api/authentication/send/reset-password?email=${email}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if (!response.ok) {
+            return false;
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Error sending reset password email:", error);
+    }
+}
+
+const checkPasswordResetToken = async (token) => {
+    try {
+        const response = await fetch(`api/authentication/validate/reset-password-token?resetToken=${token}`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) return false;
+
+        return true;
+
+    } catch (error) {
+        console.error("Error validating reset password token:", error);
+    }
+}
+
+const resetUserPassword = async (resetPasswordDTO) => {
+    try {
+        const response = await fetch(`api/authentication/reset-password`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(resetPasswordDTO),
+        });
+        if (!response.ok) {
+            throw new Error("Password reset failed!");
+        }
+        return response.ok;;
+    } catch (error) {
+        console.error("Error resetting user password:", error);
+    }
+};
+
 
 export {
     checkEmailExists,
@@ -83,4 +136,7 @@ export {
     checkPasswordAgainstEmail,
     createAccount,
     loginUser,
+    sendResetPasswordEmail,
+    checkPasswordResetToken,
+    resetUserPassword
 };

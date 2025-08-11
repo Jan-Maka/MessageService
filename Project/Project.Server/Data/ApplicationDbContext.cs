@@ -22,6 +22,8 @@ namespace Project.Server.Data
         public DbSet<FriendRequest> FriendRequests { get; set; }
 
         public DbSet<Attachment> Attachments { get; set; }
+        
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,15 +35,15 @@ namespace Project.Server.Data
                 .HasOne(uf => uf.User)
                 .WithMany(u => u.Friends)
                 .HasForeignKey(uf => uf.UserId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserFriend>()
                 .HasOne(uf => uf.Friend)
-                .WithMany() 
+                .WithMany()
                 .HasForeignKey(uf => uf.FriendId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .OnDelete(DeleteBehavior.Restrict);
 
-            
+
             modelBuilder.Entity<UserGroupChat>()
                 .HasKey(ugc => new { ugc.UserId, ugc.GroupChatId });
 
@@ -58,23 +60,23 @@ namespace Project.Server.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserConversation>()
-                .HasKey(uc => new { uc.UserId, uc.ConversationId }); 
+                .HasKey(uc => new { uc.UserId, uc.ConversationId });
 
             modelBuilder.Entity<UserConversation>()
                 .HasOne(uc => uc.User)
                 .WithMany(u => u.Conversations)
                 .HasForeignKey(uc => uc.UserId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserConversation>()
                 .HasOne(uc => uc.Conversation)
                 .WithMany(c => c.Users)
                 .HasForeignKey(uc => uc.ConversationId)
-                .OnDelete(DeleteBehavior.Restrict); 
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Message>()
                 .HasOne(m => m.Sender)
-                .WithMany() 
+                .WithMany()
                 .HasForeignKey(m => m.SenderId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -134,6 +136,15 @@ namespace Project.Server.Data
                 .Navigation(u => u.FriendRequestsReceived)
                 .AutoInclude();
 
+            modelBuilder.Entity<PasswordResetToken>()
+                .HasOne(prt => prt.User)
+                .WithMany()
+                .HasForeignKey(prt => prt.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PasswordResetToken>()
+                .Navigation(prt => prt.User)
+                .AutoInclude();
         }
 
 

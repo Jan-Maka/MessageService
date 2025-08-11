@@ -95,7 +95,7 @@ const CreateGroupChatModal = ({ isOpen, onClose, onGroupCreated }) => {
                             </div>
                     ))}
                 </div>
-                <button className="create-chat-btn" type="submit">Create Chat</button>
+                <button className="btn btn-success" type="submit">Create Chat</button>
             </form>
         } />
     );

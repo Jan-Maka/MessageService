@@ -7,7 +7,7 @@
     <SpaRoot>..\project.client</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:60676</SpaProxyServerUrl>
-    <UserSecretsId>43ca1673-6c7f-44ff-a9b2-f08aecd1123a</UserSecretsId>
+    <UserSecretsId>e06fb478-2aa4-4d3f-aaf6-e84366fc53fd</UserSecretsId>
   </PropertyGroup>
 
 	<ItemGroup>

@@ -43,6 +43,8 @@
 
 .auth-form form {
     width:100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .auth-form form input {
@@ -58,31 +60,6 @@
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.6);
     outline:none;
     transform: scale(1.025);
-}
-
-
-.auth-form form button {
-    cursor:pointer;
-    border: 1px solid lightgrey;
-    margin: 20px 0px 0px 0px;
-    padding: 12.5px;
-    justify-content: center;
-    background-color: forestgreen;
-    color: whitesmoke;
-    border-radius: 10px;
-    box-shadow: 5px 5px 5px silver;
-}
-
-.auth-form form button:hover {
-    background-color:darkgreen;
-    transform: scale(1.1);
-}
-
-.auth-form form button:disabled {
-    background-color: seagreen;
-    color: #666;
-    cursor: not-allowed;
-    transform: none;
 }
 
 .error {

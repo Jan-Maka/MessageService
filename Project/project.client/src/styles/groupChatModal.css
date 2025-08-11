@@ -34,6 +34,7 @@
     background-color: dodgerblue;
     color: white;
     border-radius: 0px 7.5px 7.5px 0px;
+    margin: 0;
 }
 
 .user-search-btn:hover {
@@ -55,21 +56,6 @@
     overflow-y:auto;
 }
 
-.create-chat-btn {
-    margin-top:2.5%;
-    border-radius:5px;
-    font-size:15px;
-    padding: 10px;
-    cursor:pointer;
-    background-color:forestgreen;
-    color:white;
-    border: 1px solid grey
-}
-
-.create-chat-btn:hover {
-    background-color:darkgreen;
-    transform: scale(1.05)
-}
 
 .user-friend {
     display:flex;

@@ -24,10 +24,8 @@ namespace Project.Server.Service
         {
             var key = GetKey(userId,email);
             if (_verificationStore.TryGetValue(key, out var record)) {
-                Console.WriteLine(record.Code+"XDXDXDXD");
                 if (record.Code == code && record.ExpirationTime >= DateTime.UtcNow) { 
                     _verificationStore.TryRemove(key, out _);
-                    Console.WriteLine("It works");
                     return Task.FromResult(true);
                 }
             }

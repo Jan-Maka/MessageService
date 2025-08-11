@@ -55,6 +55,14 @@ body {
     font-size: 16px;
     transition: background 0.3s ease;
     cursor: pointer;
+    width: fit-content;
+    margin-top: 10px;
+    box-shadow: 5px 5px 5px silver;
+    border: 1px solid grey
+}
+
+.btn:hover {
+    transform: scale(1.05)
 }
 
 .btn-danger {
@@ -71,4 +79,29 @@ body {
 
 .btn-success:hover{
     background-color:darkgreen;
+}
+
+.btn-primary {
+    background-color: cornflowerblue;
+}
+
+.btn-primary:hover {
+    background-color: royalblue;
+}
+
+.link {
+    color: cornflowerblue;
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.link:hover {
+    color: royalblue;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    color: #666;
+    cursor: not-allowed;
+    transform: none;
 }
