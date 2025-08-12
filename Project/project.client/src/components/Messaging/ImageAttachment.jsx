@@ -18,8 +18,8 @@ const ImageAttachment = ({ messageId, attachmentId }) => {
     }, [messageId, attachmentId]);
 
     const openModal = () => {
-        setIsModalOpen(true);
         setSelectedImage(imageUrl);
+        setIsModalOpen(true);
     };
 
     const closeModal = () => {

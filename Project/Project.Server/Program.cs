@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Project.Server.Components;
 using Project.Server.Data;
-using Project.Server.MessageHub;
 using Project.Server.Service;
+using Project.Server.SocketHub;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -83,7 +83,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 
 
-builder.Services.AddSignalR().AddHubOptions<MessageHub>(options =>
+builder.Services.AddSignalR().AddHubOptions<SocketHub>(options =>
 {
     options.EnableDetailedErrors = true;
 });
@@ -119,7 +119,7 @@ if (app.Environment.IsDevelopment())
 
 // Enable CORS
 app.UseCors("AllowReactApp");
-app.MapHub<MessageHub>("/chat/messages");
+app.MapHub<SocketHub>("/socketHub");
 app.UseAntiforgery();
 
 

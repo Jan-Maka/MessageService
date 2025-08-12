@@ -36,9 +36,11 @@ namespace Project.Server.Service
 
         public ConversationDTO GetConversationDTO(Conversation conversation, User user) {
             UserConversation otherUser = conversation.Users.FirstOrDefault(u => u.UserId != user.Id);
+            Message? latestMessage = conversation.Messages.Count > 0 ? conversation.Messages.Last() : null;
+            if (latestMessage == null) return new ConversationDTO(conversation.Id, _userService.GetUserDTO(otherUser.User), conversation.LastMessageReceived);
             return new ConversationDTO(conversation.Id,
                                        _userService.GetUserDTO(otherUser.User),
-                                       _messageService.GetMessagesDTOList((List<Message>)conversation.Messages),
+                                       _messageService.GetMessageDTO(latestMessage),
                                        conversation.LastMessageReceived);
         }
 

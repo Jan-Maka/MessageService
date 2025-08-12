@@ -14,12 +14,14 @@ namespace Project.Server.Controllers
         private readonly IUserService _userService;
         private readonly IConversationService _conversationService;
         private readonly IGroupChatService _groupChatService;
+        private readonly IMessageService _messageService;
 
-        public ChatController(IUserService _userService, IConversationService _conversationService, IGroupChatService _groupChatService)
+        public ChatController(IUserService _userService, IConversationService _conversationService, IGroupChatService _groupChatService, IMessageService _messageService)
         {
             this._userService = _userService;
             this._conversationService = _conversationService;
             this._groupChatService = _groupChatService;
+            this._messageService = _messageService;
         }
 
         [Authorize]
@@ -35,15 +37,16 @@ namespace Project.Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("get-conversation")]
-        public ActionResult<ConversationDTO> GetConversation([FromQuery(Name = "id")] int id)
+        [HttpGet("get-conversation/{id}/messages")]
+        public ActionResult<List<MessageDTO>> GetConversationMessages(int id)
         {
             User user = _userService.GetLoggedInUser(User);
             if (user == null) return Unauthorized();
             Conversation conversation = _conversationService.GetUserConversationById(id);
             if (conversation == null) return NotFound();
             if (!conversation.Users.Any(u => u.UserId == user.Id)) return Unauthorized();
-            return Ok(_conversationService.GetConversationDTO(conversation, user));
+            List<MessageDTO> messages = _messageService.GetMessagesDTOList(conversation.Messages.ToList());
+            return Ok(messages);
         }
 
         [Authorize]
@@ -59,15 +62,16 @@ namespace Project.Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("get-group-chat")]
-        public ActionResult<GroupChatDTO> GetGroupChat([FromQuery(Name = "id")] int id)
+        [HttpGet("get-group-chat/{id}/messages")]
+        public ActionResult<List<MessageDTO>> GetGroupChatMessages(int id)
         {
             User user = _userService.GetLoggedInUser(User);
             if (user == null) return Unauthorized();
             GroupChat chat = _groupChatService.GetGroupChatById(id);
             if (chat == null) return NotFound();
             if (!chat.Users.Any(u => u.UserId == user.Id)) return Unauthorized();
-            return Ok(_groupChatService.GetGroupChatDTO(chat));
+            List<MessageDTO> messages = _messageService.GetMessagesDTOList(chat.Messages.ToList());
+            return Ok(messages);
         }
 
         private List<Object> OrderByLastMessageReceived(List<Object> chats)

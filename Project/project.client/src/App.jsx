@@ -9,10 +9,12 @@ import SettingsPage from './pages/SettingsPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPaswordPage';
 import { AuthProvider } from './utils/AuthContext';
+import { SocketProvider } from './utils/SocketContext';
 function App() {
     return (
         <AuthProvider>
-            <Router>
+            <SocketProvider>
+                <Router>
                 <Header />
                 <Routes>
                     <Route path="/sign-up" element={<SignUp />} />
@@ -25,6 +27,7 @@ function App() {
 
                 </Routes>
             </Router>
+            </SocketProvider>
         </AuthProvider>
     );
 }

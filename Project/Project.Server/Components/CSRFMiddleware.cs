@@ -22,13 +22,14 @@ namespace Project.Server.Components
                     httpContext.Request.Path.StartsWithSegments("/api/authentication/check/password/email")||
                     httpContext.Request.Path.StartsWithSegments("/api/authentication/send/reset-password") ||
                     httpContext.Request.Path.StartsWithSegments("/api/authentication/validate/reset-password-token")||
-                    httpContext.Request.Path.StartsWithSegments("/api/authentication/reset-password"))
+                    httpContext.Request.Path.StartsWithSegments("/api/authentication/reset-password") ||
+                    httpContext.Request.Path.StartsWithSegments("/socketHub", StringComparison.OrdinalIgnoreCase))
             {
                 await _next(httpContext);
                 return;
             }
 
-            var csrfTokenFromHeader = httpContext.Request.Headers["x-xrsf-token"].ToString();
+            var csrfTokenFromHeader = httpContext.Request.Headers["X-XSRF-TOKEN"].ToString();
             var csrfTokenFromCookie = httpContext.Request.Cookies["XSRF-TOKEN"];
 
             Console.WriteLine("CSRF Token from Header: " + csrfTokenFromHeader);

@@ -1,4 +1,5 @@
 import * as signalR from "@microsoft/signalr";
+import { getCsrfToken } from "./TokenService";
 
 let connection = null;
 
@@ -6,8 +7,8 @@ export const startConnection = async () => {
     if (connection) return;
 
     connection = new signalR.HubConnectionBuilder()
-        .withUrl("/chat/messages",{
-            accessTokenFactory: () => localStorage.getItem("jwtToken")
+        .withUrl("/socketHub",{
+            accessTokenFactory: () => localStorage.getItem("jwtToken"),
         })
         .configureLogging(signalR.LogLevel.Information)
         .withAutomaticReconnect()
@@ -29,7 +30,7 @@ export const startConnection = async () => {
     }
 }
 
-export const setupCallbacks = (onMessageReceived, onChatListUpdated, onMessageUpdated, onDeleteMessage) => {
+export const setupMessageCallbacks = (onMessageReceived, onChatListUpdated, onMessageUpdated, onDeleteMessage) => {
     if (connection) {
         connection.off("UpdateChatList");
         connection.off("ReceiveMessage");
@@ -63,6 +64,18 @@ export const setupCallbacks = (onMessageReceived, onChatListUpdated, onMessageUp
     }
 };
 
+export const setUpNotificationCallback = (onNotificationReceived) => {
+    if (connection) {
+        connection.off("ReceiveNotification");
+        connection.on("ReceiveNotification", (notification) => {
+            if (onNotificationReceived) {
+                onNotificationReceived(notification);
+            }
+        });
+    } else {
+        console.error("No SignalR connection available to register notification callback.");
+    }
+};
 
 export const joinChat = async (chatId, isConversation) => {
     if (connection) {

@@ -5,7 +5,7 @@
         public int Id { get; set; }
 
         public UserDTO OtherUser { get; set; }
-        public List<MessageDTO> Messages { get; set; }
+        public MessageDTO LatestMessage { get; set; }
 
         public DateTime LastMessageReceived { get; set; }
 
@@ -13,12 +13,19 @@
         {
             
         }
-
-        public ConversationDTO(int id,UserDTO otherUser, List<MessageDTO> messages, DateTime lastMessageReceived)
+        
+        public ConversationDTO(int id, UserDTO otherUser, DateTime lastMessageReceived)
         {
             Id = id;
             OtherUser = otherUser;
-            Messages = messages;
+            LastMessageReceived = lastMessageReceived;
+        }
+
+        public ConversationDTO(int id, UserDTO otherUser, MessageDTO latestMessage, DateTime lastMessageReceived)
+        {
+            Id = id;
+            OtherUser = otherUser;
+            LatestMessage = latestMessage;
             LastMessageReceived = lastMessageReceived;
         }
     }

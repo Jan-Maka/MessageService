@@ -5,7 +5,7 @@ import { formatDate } from '../../utils/CommonUtils';
 const ChatCardContainer = ({ chat, onClick, disabled }) => {
     const isConversation = !!chat.otherUser;
     const chatTitle = isConversation ? `@${chat.otherUser.username}` : chat.name;
-    const lastMessage = chat.messages.length > 0 ? chat.messages[chat.messages.length - 1] : null;
+    const lastMessage = chat.latestMessage ? chat.latestMessage : null;
     const lastMessageText = lastMessage ? `${lastMessage.senderName}: ${lastMessage.content.slice(0,20)}...` : "No messages have been sent!" ;
 
     return (
@@ -26,15 +26,11 @@ ChatCardContainer.propTypes = {
         otherUser: PropTypes.shape({
             username: PropTypes.string.isRequired
         }),
-        messages: PropTypes.arrayOf(
-            PropTypes.shape({
-                id: PropTypes.number.isRequired,
-                senderId: PropTypes.number.isRequired,
-                senderName: PropTypes.string.isRequired,
-                content: PropTypes.string.isRequired,
-                sentAt: PropTypes.string.isRequired,
-            })
-        ).isRequired,
+        latestMessage: PropTypes.shape({
+            id: PropTypes.number.isRequired,
+            content: PropTypes.string.isRequired,
+            
+        }),
         lastMessageReceived: PropTypes.string.isRequired,
     }).isRequired,
     onClick: PropTypes.func.isRequired,

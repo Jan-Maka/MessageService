@@ -37,11 +37,15 @@ namespace Project.Server.Service
 
         public GroupChatDTO GetGroupChatDTO(GroupChat groupChat)
         {
+            Message? latestMessage = groupChat.Messages.Count > 0 ? groupChat.Messages.Last() : null;
+            if (latestMessage == null) return new GroupChatDTO(groupChat.Id, groupChat.Name, 
+                                                               _userService.GetUserDTOsFromUserGroupChat((List<UserGroupChat>)groupChat.Users),
+                                                                groupChat.LastMessageReceived);
            return new GroupChatDTO(groupChat.Id,
-                                   groupChat.Name,
-                                   _userService.GetUserDTOsFromUserGroupChat((List<UserGroupChat>)groupChat.Users),
-                                   _messageService.GetMessagesDTOList((List<Message>)groupChat.Messages),
-                                   groupChat.LastMessageReceived);
+                                     groupChat.Name,
+                                     _userService.GetUserDTOsFromUserGroupChat((List<UserGroupChat>)groupChat.Users),
+                                     _messageService.GetMessageDTO(latestMessage),
+                                     groupChat.LastMessageReceived);
         }
 
         public List<GroupChatDTO>GetGroupChatList(List<GroupChat> groupChats)

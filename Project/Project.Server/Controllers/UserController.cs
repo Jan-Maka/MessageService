@@ -14,6 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Project.Server.Controllers
 {
@@ -43,7 +44,7 @@ namespace Project.Server.Controllers
             if(user == null) return Unauthorized();
 
             List<UserDTO> users = await _userService.GetUsersFromSearch(query, user);
-            if (users.Count == 0) return NotFound(new List<UserDTO>());
+            if (users.Count == 0) return NoContent();
 
             return Ok(users);
         }
@@ -130,7 +131,7 @@ namespace Project.Server.Controllers
             User user = _userService.GetLoggedInUser(User);
             if (user == null) return Unauthorized();
             List<UserDTO> friends = _userService.GetUserFriends(user);
-            if (friends.Count == 0) return NotFound(new List<UserDTO>());
+            if (friends.Count == 0) return NoContent();
             return Ok(friends);
         }
 
@@ -140,7 +141,7 @@ namespace Project.Server.Controllers
             User user = _userService.GetLoggedInUser(User);
             if (user == null) return Unauthorized();
             List<UserDTO> result = _userService.GetUserFriendsFromSearch(user,query);
-            if (result.Count == 0) return NotFound(new List<UserDTO>());
+            if (result.Count == 0) return NoContent();
             return Ok(result);
         }
     }

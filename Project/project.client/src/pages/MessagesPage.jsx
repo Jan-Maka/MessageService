@@ -5,8 +5,8 @@ import ChatWindow from "../components/Messaging/ChatWindow";
 import MessageInput from "../components/Messaging/MessageInput";
 import CreateGroupChatModal from "../components/Messaging/CreateGroupChatModal";
 import { useState, useEffect, useRef } from 'react';
-import { startConnection, setupCallbacks, joinChat, leaveChat, sendMessage, updateMessage, deleteMessage,stopConnection } from '../services/signalRMessagingService';
-import { fetchAllChats, searchChats, createAttachments  } from '../services/ChatService';
+import { setupMessageCallbacks, joinChat, leaveChat, sendMessage, updateMessage, deleteMessage } from '../services/signalRService';
+import { fetchAllChats, fetchChatMessagesById,searchChats, createAttachments  } from '../services/ChatService';
 
 function MessagesPage() {
     const [chats, setChats] = useState([]);
@@ -22,16 +22,6 @@ function MessagesPage() {
 
     const chatContainerRef = useRef(null);
     const messagesRef = useRef([]);
-
-    useEffect(() => {
-        const setUp = async () => {
-            await loadChats();
-            await startConnection();
-        }
-        setUp();
-
-        return () => { stopConnection()};
-    }, []);
 
     useEffect(() => {
         const onMessageReceived = async (message) => {
@@ -52,7 +42,7 @@ function MessagesPage() {
                 const updatedChat = {
                     ...chat,
                     lastMessageReceived: message.sentAt,
-                    messages: [...chat.messages, message]
+                    latestMessage: message,
                 };
                 const updatedChats = chats.filter(c => c !== chat);
                 return [updatedChat, ...updatedChats];
@@ -74,13 +64,9 @@ function MessagesPage() {
                 const chat = chats.find(chat =>
                     chat.id === chatId && ((isGroup && !chat.otherUser) || (!isGroup && chat.otherUser))
                 ); 
-                if (!chat) return chats; 
+                if (!chat) return chats;
 
-                const messageIndex = chat.messages.findIndex(msg => msg.id === message.id);
-
-                if (messageIndex === -1) return chats;
-
-                chat.messages[messageIndex] = message;
+                if(chat.latestMessage.id === message.id) chat.latestMessage = message;
 
                 return chats;
             });
@@ -99,11 +85,9 @@ function MessagesPage() {
 
                 const updatedChats = chats.map(chat => {
                     if (chat.id === chatId && ((isGroup && !chat.otherUser) || (!isGroup && chat.otherUser))) {
-                        const updatedMessages = chat.messages.filter(msg => msg.id !== message.id);
-                        return {
-                            ...chat, 
-                            messages: updatedMessages
-                        };
+                        if (chat.latestMessage && chat.latestMessage.id === message.id) {
+                            chat.latestMessage = null; // Clear latest message if it was deleted
+                        }                           
                     }
                     return chat; 
                 });
@@ -113,7 +97,7 @@ function MessagesPage() {
 
         };
 
-        setupCallbacks(onMessageReceived, onChatListUpdated, onMessageUpdated, onDeleteMessage);
+        setupMessageCallbacks(onMessageReceived, onChatListUpdated, onMessageUpdated, onDeleteMessage);
 
     }, [currentChat, isConversation]);
 
@@ -162,7 +146,7 @@ function MessagesPage() {
         handleSearched();
     };
 
-    const renderChat = (chat) => {
+    const renderChat =  async (chat) => {
         if (!chat) return;
 
         if (currentChat) {
@@ -176,9 +160,9 @@ function MessagesPage() {
         if (isConversation !== isConv) {
             setIsConversation(isConv);
         }
-        if (messages !== chat.messages) {
-            setMessages(chat.messages);
-        }
+        const chatMessages = await fetchChatMessagesById(chat.id, isConv); 
+
+        setMessages(chatMessages);
         setAttachments([]);
 
         handleChatChanged();

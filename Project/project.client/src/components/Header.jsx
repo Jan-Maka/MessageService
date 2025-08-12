@@ -1,8 +1,21 @@
 import '../styles/header.css';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AuthContext } from '../utils/AuthContext';
+import { useSocket } from '../utils/SocketContext';
 function Header() {
     const { isLoggedIn, logout } = useContext(AuthContext);
+    const {isConnection, setUpNotificationCallback} = useSocket();
+
+    useEffect(() => {
+        if(!isConnection) return;
+
+        const onNotificationReceived = async (notification) => {
+            console.log("Notification received:", notification);
+        };
+
+        setUpNotificationCallback(onNotificationReceived);
+    }, [isConnection, setUpNotificationCallback]);
+
     return (
         <header>
             <h1><i className="bi bi-envelope-fill"></i> Message Service</h1>

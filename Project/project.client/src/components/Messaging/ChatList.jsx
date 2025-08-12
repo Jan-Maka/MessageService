@@ -23,7 +23,7 @@ ChatList.propTypes = {
             name: PropTypes.string,
             otherUser: PropTypes.shape({
                 username: PropTypes.string
-            })
+            }),
         })
     ).isRequired,
     currentChat: PropTypes.shape({

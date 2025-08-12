@@ -60,7 +60,7 @@ export default defineConfig({
                 secure: false,
                 ws: true,
             },
-            '/chat/messages': {
+            '/socketHub': {
                 target,
                 changeOrigin: true,
                 secure: false, 

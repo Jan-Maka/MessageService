@@ -3,9 +3,9 @@ using Project.Server.DTOs;
 using Project.Server.Models;
 using Project.Server.Service;
 
-namespace Project.Server.MessageHub
+namespace Project.Server.SocketHub
 {
-    public class MessageHub: Hub
+    public class SocketHub: Hub
     {
         private readonly IMessageService _messageService;
         private readonly IConversationService _conversationService;
@@ -13,19 +13,18 @@ namespace Project.Server.MessageHub
         private static Dictionary<string, string> _userConnections = new Dictionary<string, string>();
 
 
-        public MessageHub(IMessageService messageService, IConversationService conversationService, IGroupChatService groupChatService)
+        public SocketHub(IMessageService messageService, IConversationService conversationService, IGroupChatService groupChatService)
         {
             _messageService = messageService;
             _conversationService = conversationService;
             _groupChatService = groupChatService;
         }
 
-        public Task RegisterUser(string userId)
+        public async Task RegisterUser(string userId)
         {
             _userConnections[userId] = Context.ConnectionId;
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"notifications_{userId}");
             Console.WriteLine($"User {userId} registered with ConnectionId {Context.ConnectionId}");
-
-            return Task.CompletedTask;
         }
 
         public async Task JoinChat(int chatId, bool isConversation)

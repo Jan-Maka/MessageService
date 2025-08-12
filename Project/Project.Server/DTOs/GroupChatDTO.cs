@@ -8,7 +8,7 @@
 
         public List<UserDTO> Users { get; set; }
 
-        public List<MessageDTO> Messages { get; set; } = new List<MessageDTO>();
+        public MessageDTO LatestMessage { get; set; }
 
         public DateTime LastMessageReceived { get; set; }
 
@@ -17,12 +17,20 @@
             
         }
 
-        public GroupChatDTO(int id, string name, List<UserDTO> users, List<MessageDTO> messages, DateTime lastMessageReceived)
+        public GroupChatDTO(int id, string name, List<UserDTO> users, DateTime lastMessageReceived)
         {
             Id = id;
             Name = name;
             Users = users;
-            Messages = messages;
+            LastMessageReceived = lastMessageReceived;
+        }
+
+        public GroupChatDTO(int id, string name, List<UserDTO> users, MessageDTO latestMessage, DateTime lastMessageReceived)
+        {
+            Id = id;
+            Name = name;
+            Users = users;
+            LatestMessage = latestMessage;
             LastMessageReceived = lastMessageReceived;
         }
     }

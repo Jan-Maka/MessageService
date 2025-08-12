@@ -22,22 +22,22 @@ export const fetchAllChats = async () => {
     }
 };
 
-//export const fetchChatById = async (chatId, isConversation) => {
-//    const CALL = isConversation ? "/get-conversation" : "/get-group-chat";
-//    try {
-//        const response = await fetch(`${API_BASE_URL}${CALL}?id=${chatId}`, {
-//            method: "GET",
-//            headers: {
-//                "Content-Type": "application/json",
-//                "Authorization": `Bearer ${token}`,
-//            },
-//        });
+export const fetchChatMessagesById = async (chatId, isConversation) => {
+   const CALL = isConversation ? "/get-conversation" : "/get-group-chat";
+   try {
+       const response = await fetch(`${API_BASE_URL}${CALL}/${chatId}/messages`, {
+           method: "GET",
+           headers: {
+               "Content-Type": "application/json",
+               "Authorization": `Bearer ${token}`,
+           },
+       });
 
-//        return response.ok ? response.json() : {};
-//    } catch (error) {
-//        console.error("Error fetching chat:", error);
-//    }
-//}
+       return response.ok ? response.json() : {};
+   } catch (error) {
+       console.error("Error fetching chat:", error);
+   }
+}
 
 export const searchChats = async (query) => {
     if (!query.trim()) return fetchAllChats();

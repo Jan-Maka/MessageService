@@ -2,7 +2,7 @@ import { getCsrfToken } from '../services/TokenService';
 
 const API_BASE_URL = "/api/user";
 const token = localStorage.getItem("jwtToken");
-const csrfToken = getCsrfToken();
+const csrfToken = await getCsrfToken();
 
 export const sendFriendRequest = async (userId) => {
     try {
@@ -15,8 +15,6 @@ export const sendFriendRequest = async (userId) => {
             },
             credentials: 'include'
         });
-
-
         if (response.ok) return await response.json();
         
     } catch (error) {
